@@ -1,139 +1,141 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta charset="UTF-8" />
-  <title>Custom Skateboard Shape</title>
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Custom Skateboard Shape - Crispy Custom Skateboards</title>
+  <!-- Google Font for a fun, bold style -->
+  <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
   <style>
-    /* ====== GLOBAL STYLES (desktop + mobile) ====== */
-
-    /* The canvas should resize or be centered as needed */
+    /* ===== GLOBAL STYLES ===== */
+    body {
+      font-family: 'Lobster', cursive;
+      background-color: #fff8f0; /* light bacon-inspired background */
+      color: #333;
+      margin: 20px;
+    }
+    
     #boardCanvas {
       display: block;
       margin: 0 auto;
-      background: #f0f0f0; /* default background */
+      background: #fff8f0;
+      border: 1px solid #B22222;
     }
-
-    /* Panels (the Body, Nose, Tail sections) */
+    
+    /* Panels (Body, Nose, Tail) */
     .panel {
-      /* By default, hide them in a "tabbed" scenario;
-         .active will show the currently selected tab on small screens. */
       display: none;
-      border: 1px solid #ccc;
+      border: 1px solid #B22222;
+      border-radius: 8px;
       padding: 10px;
       margin-bottom: 10px;
       box-sizing: border-box;
+      background-color: #ffffff;
     }
-
-    /* When a panel is "active," show it */
+    
     .panel.active {
       display: block;
     }
-
-    /* Fieldset styling */
+    
+    /* Fieldset and Legend styling */
     fieldset {
-      border: 1px solid #ccc;
+      border: 1px solid #B22222;
+      border-radius: 8px;
       padding: 10px;
     }
-
-    /* Slider group layout */
+    
+    legend {
+      color: #B22222;
+      font-size: 1.2em;
+    }
+    
     .slider-group {
       margin: 10px 0;
     }
-
-    /* ====== TAB BUTTONS ====== */
+    
+    /* ===== TAB BUTTONS ===== */
     .tab-buttons {
-      /* We'll hide these on desktop if we want to see all panels side-by-side there.
-         On mobile, we show them to toggle tabs. */
       display: none;
       margin-bottom: 10px;
     }
-
+    
     .tab-button {
       padding: 8px 12px;
       margin-right: 5px;
-      border: 1px solid #ccc;
-      background: #eee;
+      border: 1px solid #B22222;
+      background: #ffe6e6;
       cursor: pointer;
+      border-radius: 4px;
     }
-
+    
     .tab-button.active {
-      background: #d32f2f;
+      background: #B22222;
       color: #fff;
     }
-
-    /* ====== COMMENT & ACTION BUTTONS ====== */
-
+    
+    /* ===== COMMENT & ACTION BUTTONS ===== */
     .comment-and-buttons {
       display: flex;
       gap: 20px;
       margin-top: 20px;
     }
-
+    
     .comment-box {
       flex: 1;
     }
-
+    
+    .comment-box textarea {
+      width: 100%;
+      border: 1px solid #B22222;
+      border-radius: 4px;
+      padding: 8px;
+    }
+    
     .button-container {
       flex-shrink: 0;
       display: flex;
       flex-direction: column;
       gap: 10px;
     }
-
+    
     .button-container button {
       padding: 10px 20px;
-      background-color: #d32f2f;
+      background-color: #B22222;
       color: white;
       border: none;
       border-radius: 4px;
       cursor: pointer;
-      margin: 0;
     }
-
+    
     .button-container button:hover {
-      background-color: #b71c1c;
+      background-color: #8B0000;
     }
-
-    /* ============== MEDIA QUERIES ============== */
-
-    /* ----- MOBILE (MAX 768px) ----- */
-    @media screen and (max-: 1024px) {
-      /* Show tab buttons on mobile */
+    
+    /* ===== MEDIA QUERIES ===== */
+    @media screen and (max-width: 1024px) {
       .tab-buttons {
         display: flex;
         flex-wrap: wrap;
       }
-
-      /* We rely on .active to show only one panel at a time */
       .panel {
-        : 100%; /* Let the panel fill the  on mobile */
+        width: 100%;
       }
     }
-
-    /* ----- DESKTOP (MIN 1025px) ----- */
-    @media screen and (min-: 1025px) {
-      /* On larger screens, we hide the tab buttons (we don't need them
-         because we'll show all panels side by side) */
+    
+    @media screen and (min-width: 1025px) {
       .tab-buttons {
         display: none;
       }
-
-      /* Show all panels side by side */
       .panel {
-        display: inline-block; /* or 'flex', but inline-block is simpler here */
+        display: inline-block;
         vertical-align: top;
         width: 20%;
         margin-right: 1.5%;
       }
-
-      /* Remove the right margin from the last panel if you want */
       .panel:nth-last-of-type(1) {
         margin-right: 0;
       }
     }
-
   </style>
 </head>
 <body>
@@ -141,84 +143,48 @@
   <!-- Intro / Instructions -->
   <p>
     <strong>Step 1:</strong> Design your custom board shape using the editor below.<br />
-    The canvas represents the 34x10 uncut blank that your board will be shaped from. <br />
+    The canvas represents the 34x10 uncut blank that your board will be shaped from.<br />
     <em>*If the board shape doesn't load, try refreshing or another browser—this tool is a work in progress.</em>
   </p>
 
-  <!-- Single Canvas -->
+  <!-- Canvas -->
   <canvas id="boardCanvas"></canvas>
 
-  <!-- Tab Buttons (for small screens) -->
+  <!-- Tab Buttons (visible on mobile) -->
   <div class="tab-buttons">
     <button class="tab-button active" data-tab="bodyPanel">Body</button>
     <button class="tab-button" data-tab="nosePanel">Nose</button>
     <button class="tab-button" data-tab="tailPanel">Tail</button>
   </div>
+
   <!-- BODY Panel -->
   <div id="bodyPanel" class="panel active">
     <fieldset>
       <legend><strong>Body</strong></legend>
-
       <div class="slider-group">
         <label for="bodyWidthNose">
-          Front Truck Width (inches): <span id="widthNoseValue">08.50</span>
+          Front Truck Width (inches): <span id="widthNoseValue">8.50</span>
         </label>
-        <input
-          type="range"
-          id="bodyWidthNose"
-          value="8.5"
-          min="1"
-          max="10"
-          step="0.125"
-          oninput="updateBoardShape()"
-        />
+        <input type="range" id="bodyWidthNose" value="8.5" min="1" max="10" step="0.125" oninput="updateBoardShape()">
       </div>
-
       <div class="slider-group">
         <label for="bodyWidthTail">
-          Back Truck Width (inches): <span id="widthTailValue">08.50</span>
+          Back Truck Width (inches): <span id="widthTailValue">8.50</span>
         </label>
-        <input
-          type="range"
-          id="bodyWidthTail"
-          value="8.5"
-          min="1"
-          max="10"
-          step="0.125"
-          oninput="updateBoardShape()"
-        />
+        <input type="range" id="bodyWidthTail" value="8.5" min="1" max="10" step="0.125" oninput="updateBoardShape()">
       </div>
-
       <div class="slider-group">
         <label for="bodyCurvature">
           Curve: <span id="bodyCurvatureValue">45</span>
         </label>
-        <input
-          type="range"
-          id="bodyCurvature"
-          value="45"
-          min="-50"
-          max="50"
-          step="1"
-          oninput="updateBoardShape()"
-        />
+        <input type="range" id="bodyCurvature" value="45" min="-50" max="50" step="1" oninput="updateBoardShape()">
       </div>
-
       <div class="slider-group">
         <label for="bodyControlPointPosition">
           Curve Peak: <span id="bodyControlPointPositionValue">0.50</span>
         </label>
-        <input
-          type="range"
-          id="bodyControlPointPosition"
-          value="0.5"
-          min="0"
-          max="1"
-          step="0.01"
-          oninput="updateBoardShape()"
-        />
+        <input type="range" id="bodyControlPointPosition" value="0.5" min="0" max="1" step="0.01" oninput="updateBoardShape()">
       </div>
-
       <strong>
         Total Board Length: <span id="totalBoardLengthValue">22.00</span> inches
       </strong>
@@ -229,65 +195,29 @@
   <div id="nosePanel" class="panel">
     <fieldset>
       <legend><strong>Nose</strong></legend>
-
       <div class="slider-group">
         <label for="noseLength">
-          Length (inches): <span id="noseLengthValue">05.50</span>
+          Length (inches): <span id="noseLengthValue">5.50</span>
         </label>
-        <input
-          type="range"
-          id="noseLength"
-          value="5.5"
-          min="3"
-          max="6"
-          step="0.125"
-          oninput="updateBoardShape()"
-        />
+        <input type="range" id="noseLength" value="5.5" min="3" max="6" step="0.125" oninput="updateBoardShape()">
       </div>
-
       <div class="slider-group">
         <label for="noseWidth">
-          Width (inches): <span id="noseWidthValue">00.00</span>
+          Width (inches): <span id="noseWidthValue">0.00</span>
         </label>
-        <input
-          type="range"
-          id="noseWidth"
-          value="0"
-          min="0"
-          max="10"
-          step="0.125"
-          oninput="updateBoardShape()"
-        />
+        <input type="range" id="noseWidth" value="0" min="0" max="10" step="0.125" oninput="updateBoardShape()">
       </div>
-
       <div class="slider-group">
         <label for="noseCurvature">
           Curve: <span id="noseCurvatureValue">40</span>
         </label>
-        <input
-          type="range"
-          id="noseCurvature"
-          value="40"
-          min="0"
-          max="50"
-          step="1"
-          oninput="updateBoardShape()"
-        />
+        <input type="range" id="noseCurvature" value="40" min="0" max="50" step="1" oninput="updateBoardShape()">
       </div>
-
       <div class="slider-group">
         <label for="noseControlPointPosition">
           Curve Peak: <span id="noseControlPointPositionValue">0.96</span>
         </label>
-        <input
-          type="range"
-          id="noseControlPointPosition"
-          value="0.96"
-          min="0"
-          max="1"
-          step="0.01"
-          oninput="updateBoardShape()"
-        />
+        <input type="range" id="noseControlPointPosition" value="0.96" min="0" max="1" step="0.01" oninput="updateBoardShape()">
       </div>
     </fieldset>
   </div>
@@ -296,65 +226,29 @@
   <div id="tailPanel" class="panel">
     <fieldset>
       <legend><strong>Tail</strong></legend>
-
       <div class="slider-group">
         <label for="tailLength">
-          Length (inches): <span id="tailLengthValue">05.50</span>
+          Length (inches): <span id="tailLengthValue">5.50</span>
         </label>
-        <input
-          type="range"
-          id="tailLength"
-          value="5.5"
-          min="3"
-          max="6"
-          step="0.125"
-          oninput="updateBoardShape()"
-        />
+        <input type="range" id="tailLength" value="5.5" min="3" max="6" step="0.125" oninput="updateBoardShape()">
       </div>
-
       <div class="slider-group">
         <label for="tailWidth">
-          Width (inches): <span id="tailWidthValue">00.00</span>
+          Width (inches): <span id="tailWidthValue">0.00</span>
         </label>
-        <input
-          type="range"
-          id="tailWidth"
-          value="0"
-          min="0"
-          max="10"
-          step="0.125"
-          oninput="updateBoardShape()"
-        />
+        <input type="range" id="tailWidth" value="0" min="0" max="10" step="0.125" oninput="updateBoardShape()">
       </div>
-
       <div class="slider-group">
         <label for="tailCurvature">
           Curve: <span id="tailCurvatureValue">40</span>
         </label>
-        <input
-          type="range"
-          id="tailCurvature"
-          value="40"
-          min="0"
-          max="50"
-          step="1"
-          oninput="updateBoardShape()"
-        />
+        <input type="range" id="tailCurvature" value="40" min="0" max="50" step="1" oninput="updateBoardShape()">
       </div>
-
       <div class="slider-group">
         <label for="tailControlPointPosition">
           Curve Peak: <span id="tailControlPointPositionValue">0.96</span>
         </label>
-        <input
-          type="range"
-          id="tailControlPointPosition"
-          value="0.96"
-          min="0"
-          max="1"
-          step="0.01"
-          oninput="updateBoardShape()"
-        />
+        <input type="range" id="tailControlPointPosition" value="0.96" min="0" max="1" step="0.01" oninput="updateBoardShape()">
       </div>
     </fieldset>
   </div>
@@ -362,15 +256,9 @@
   <!-- Comment & Action Buttons -->
   <div class="comment-and-buttons">
     <div class="comment-box">
-      <label for="userComment">Add a Comment:</label><br />
-      <textarea
-        id="userComment"
-        rows="4"
-        cols="50"
-        placeholder="Type your comment here..."
-      ></textarea>
+      <label for="userComment">Add a Comment:</label><br>
+      <textarea id="userComment" rows="4" cols="50" placeholder="Type your comment here..."></textarea>
     </div>
-
     <div class="button-container">
       <button onclick="clearCanvas()">Clear Canvas</button>
       <button onclick="resetToDefault()">Reset to Default Shape</button>
@@ -379,64 +267,47 @@
   </div>
 
   <p>
-    <strong>Step 3:</strong> Click ‘Save’ to download the PNG file to your device.<br />
+    <strong>Step 3:</strong> Click ‘Save’ to download the PNG file to your device.<br>
     <em>*If saving on mobile causes words to overlap, don't worry—I’ll still see what you designed!</em>
   </p>
-  <!-- Fabric.js -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/521/fabric.min.js"></script>
 
-  <!-- Your JavaScript (combined logic for desktop + mobile) -->
+  <!-- Fabric.js Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/521/fabric.min.js"></script>
+  <!-- Main JavaScript -->
   <script>
-    var canvas;        
-    var body, nose, tail;  
+    var canvas, body, nose, tail;
     var noseArea, tailArea;
     var centerX, centerY;
     var pixelsPerInch = 30;
 
     window.onload = function() {
-      // Create our single canvas
       canvas = new fabric.Canvas('boardCanvas');
-      
-      // Adjust size to fit screen width (responsive)
       adjustCanvasSize();
-      canvas.setBackgroundColor('#f0f0f0', canvas.renderAll.bind(canvas));
-
+      canvas.setBackgroundColor('#fff8f0', canvas.renderAll.bind(canvas));
       centerX = canvas.getWidth() / 2;
       centerY = canvas.getHeight() / 2;
-
-      // Draw optional reference lines/zones
       drawDefaultLinesAndZones();
-
-      // Update shape with default slider values
       updateBoardShape();
-
-      // Re-adjust & redraw on window resize
       window.addEventListener('resize', function() {
         adjustCanvasSize();
         updateBoardShape();
       });
-
-      // Prevent scrolling on mobile when touching sliders
       preventScrollOnSliders();
     };
 
     function adjustCanvasSize() {
       var totalInchesWide = 34;
-      var availableWidth = window.innerWidth - 40; 
+      var availableWidth = window.innerWidth - 40;
       pixelsPerInch = availableWidth / totalInchesWide;
-
-      var canvasWidth = pixelsPerInch * 34; // 34" wide
-      var canvasHeight = pixelsPerInch * 10; // 10" high
-
+      var canvasWidth = pixelsPerInch * 34;
+      var canvasHeight = pixelsPerInch * 10;
       canvas.setWidth(canvasWidth);
       canvas.setHeight(canvasHeight);
-
       centerX = canvasWidth / 2;
       centerY = canvasHeight / 2;
     }
 
     function drawDefaultLinesAndZones() {
-      // Center lines
       var verticalLine = new fabric.Line([centerX, 0, centerX, canvas.getHeight()], {
         stroke: 'green',
         strokeWidth: 1,
@@ -444,7 +315,6 @@
         opacity: 0.5
       });
       canvas.add(verticalLine);
-
       var horizontalLine = new fabric.Line([0, centerY, canvas.getWidth(), centerY], {
         stroke: 'green',
         strokeWidth: 1,
@@ -452,8 +322,6 @@
         opacity: 0.5
       });
       canvas.add(horizontalLine);
-
-      // Nose area (front 6 inches)
       noseArea = new fabric.Rect({
         left: 0,
         top: 0,
@@ -463,8 +331,6 @@
         selectable: false
       });
       canvas.add(noseArea);
-
-      // Tail area (back 6 inches)
       tailArea = new fabric.Rect({
         left: canvas.getWidth() - inchesToPixels(6),
         top: 0,
@@ -474,7 +340,6 @@
         selectable: false
       });
       canvas.add(tailArea);
-
       canvas.renderAll();
     }
 
@@ -493,18 +358,14 @@
 
       var widthNose = parseFloat(document.getElementById('bodyWidthNose').value);
       var widthTail = parseFloat(document.getElementById('bodyWidthTail').value);
-
       var noseLength = parseFloat(document.getElementById('noseLength').value);
       var tailLength = parseFloat(document.getElementById('tailLength').value);
-
       var noseWidth = parseFloat(document.getElementById('noseWidth').value);
       var noseCurvature = parseFloat(document.getElementById('noseCurvature').value);
       var noseCtrlPos = parseFloat(document.getElementById('noseControlPointPosition').value);
-
       var tailWidth = parseFloat(document.getElementById('tailWidth').value);
       var tailCurvature = parseFloat(document.getElementById('tailCurvature').value);
       var tailCtrlPos = parseFloat(document.getElementById('tailControlPointPosition').value);
-
       var bodyCurvature = parseFloat(document.getElementById('bodyCurvature').value);
       var bodyCtrlPos = parseFloat(document.getElementById('bodyControlPointPosition').value);
 
@@ -521,7 +382,7 @@
       document.getElementById('noseControlPointPositionValue').innerText = formatTwoDecimalPlaces(noseCtrlPos);
       document.getElementById('tailControlPointPositionValue').innerText = formatTwoDecimalPlaces(tailCtrlPos);
 
-      var totalBoardLength = noseLength + tailLength + 22; // base body is 22"
+      var totalBoardLength = noseLength + tailLength + 22;
       document.getElementById('totalBoardLengthValue').innerText = formatTwoDecimalPlaces(totalBoardLength);
 
       var bodyLengthPx = canvas.getWidth() - inchesToPixels(12);
@@ -588,7 +449,7 @@
 
     function clearCanvas() {
       canvas.clear();
-      canvas.setBackgroundColor('#f0f0f0', canvas.renderAll.bind(canvas));
+      canvas.setBackgroundColor('#fff8f0', canvas.renderAll.bind(canvas));
       drawDefaultLinesAndZones();
     }
 
@@ -597,28 +458,23 @@
       document.getElementById('bodyWidthTail').value = 8.5;
       document.getElementById('bodyCurvature').value = 45;
       document.getElementById('bodyControlPointPosition').value = 0.5;
-
       document.getElementById('noseLength').value = 5.5;
       document.getElementById('noseWidth').value = 0;
       document.getElementById('noseCurvature').value = 40;
       document.getElementById('noseControlPointPosition').value = 0.96;
-
       document.getElementById('tailLength').value = 5.5;
       document.getElementById('tailWidth').value = 0;
       document.getElementById('tailCurvature').value = 40;
       document.getElementById('tailControlPointPosition').value = 0.96;
-
       updateBoardShape();
     }
 
     function saveAsPNG() {
       var filename = prompt("Enter a name for your file:", "custom-skateboard");
-      if (!filename) return; 
+      if (!filename) return;
       if (!filename.endsWith(".png")) filename += ".png";
-
       var originalHeight = canvas.getHeight();
       canvas.setHeight(canvas.getHeight() + 100);
-
       var comment = document.getElementById('userComment').value;
       var commentObj = null;
       if (comment) {
@@ -632,20 +488,13 @@
         });
         canvas.add(commentObj);
       }
-
       canvas.renderAll();
-
-      var dataURL = canvas.toDataURL({
-        format: 'png',
-        multiplier: 3
-      });
-
+      var dataURL = canvas.toDataURL({ format: 'png', multiplier: 3 });
       if (commentObj) {
         canvas.remove(commentObj);
       }
       canvas.setHeight(originalHeight);
       canvas.renderAll();
-
       var link = document.createElement('a');
       link.href = dataURL;
       link.download = filename;
@@ -670,17 +519,11 @@
     document.addEventListener('DOMContentLoaded', function() {
       const tabButtons = document.querySelectorAll('.tab-button');
       const panels = document.querySelectorAll('.panel');
-
       tabButtons.forEach(button => {
         button.addEventListener('click', () => {
-          // Remove .active from all buttons
           tabButtons.forEach(btn => btn.classList.remove('active'));
-          // Remove .active from all panels
           panels.forEach(panel => panel.classList.remove('active'));
-
-          // Add .active to the clicked button
           button.classList.add('active');
-          // Show the corresponding panel
           const targetPanelID = button.getAttribute('data-tab');
           document.getElementById(targetPanelID).classList.add('active');
         });
