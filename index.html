@@ -113,13 +113,16 @@
     }
 
     /* ----- DESKTOP (MIN 1024px) ----- */
-  @media screen and (min-width: 1025px) {
-
- .panel {
-  display: inline-block;
-  vertical-align: top;
-  width: 28%; /* or 25%, etc. */
-  margin-right: 1.5%;}
+@media screen and (min-width: 1025px) {
+  /* side by side for bigger screens */
+  .tab-buttons {
+    display: none;
+  }
+  .panel {
+    display: inline-block;
+    width: 30%;
+    margin-right: 1.5%;
+  }
 }
 
 
