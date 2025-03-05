@@ -402,6 +402,7 @@
       `, {
         fill: 'transparent',
         stroke: 'black',
+        strokeUniform: true,
         selectable: false
       });
 
@@ -420,6 +421,7 @@
       `, {
         fill: 'transparent',
         stroke: 'black',
+        strokeUniform: true,
         selectable: false
       });
 
@@ -438,6 +440,7 @@
       `, {
         fill: 'transparent',
         stroke: 'black',
+        strokeUniform: true,
         selectable: false
       });
 
@@ -473,28 +476,41 @@
       var filename = prompt("Enter a name for your file:", "custom-skateboard");
       if (!filename) return;
       if (!filename.endsWith(".png")) filename += ".png";
+      
+      // Calculate a multiplier so the saved image is at least 1024px wide
+      var multiplier = Math.max(1024 / canvas.getWidth(), 1);
+      
       var originalHeight = canvas.getHeight();
-      canvas.setHeight(canvas.getHeight() + 100);
+      // Add extra height for the comment area, ensuring it will be ~100px tall after scaling
+      var extraHeight = 100 / multiplier;
+      canvas.setHeight(originalHeight + extraHeight);
+      
       var comment = document.getElementById('userComment').value;
       var commentObj = null;
       if (comment) {
+        // Temporarily set a reduced font size so that after scaling it appears as intended (12px)
         commentObj = new fabric.Textbox("Comment: " + comment, {
           left: 20,
           top: originalHeight + 10,
-          fontSize: 12,
+          fontSize: 12 / multiplier,
           fill: 'black',
           width: canvas.getWidth() - 40,
           textAlign: 'left'
         });
         canvas.add(commentObj);
       }
+      
       canvas.renderAll();
-      var dataURL = canvas.toDataURL({ format: 'png', multiplier: 3 });
-      if (commentObj) {
-        canvas.remove(commentObj);
-      }
+      
+      var dataURL = canvas.toDataURL({
+        format: 'png',
+        multiplier: multiplier
+      });
+      
+      if (commentObj) canvas.remove(commentObj);
       canvas.setHeight(originalHeight);
       canvas.renderAll();
+      
       var link = document.createElement('a');
       link.href = dataURL;
       link.download = filename;
