@@ -108,25 +108,20 @@
 
       /* We rely on .active to show only one panel at a time */
       .panel {
-        width: 100%; /* Let the panel fill the width on mobile */
+        : 100%; /* Let the panel fill the  on mobile */
       }
     }
 
     /* ----- DESKTOP (MIN 1024px) ----- */
   @media screen and (min-width: 1025px) {
-  .panel {
-    display: block; /* let .panel fill the parent flex item */
-    width: auto;    /* rely on flex to size them */
-    margin: 0 1rem 1rem 0;
-  }
 
-  /* Wrap them in a container that uses flexbox: */
-  .panels-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-  }
+ .panel {
+  display: inline-block;
+  vertical-align: top;
+  width: 28%; /* or 25%, etc. */
+  margin-right: 1.5%;}
 }
+
 
   </style>
 </head>
