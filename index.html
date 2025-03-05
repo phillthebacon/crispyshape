@@ -99,7 +99,7 @@
     /* ============== MEDIA QUERIES ============== */
 
     /* ----- MOBILE (MAX 768px) ----- */
-    @media screen and (max-width: 768px) {
+    @media screen and (max-width: 1024px) {
       /* Show tab buttons on mobile */
       .tab-buttons {
         display: flex;
@@ -113,7 +113,7 @@
     }
 
     /* ----- DESKTOP (MIN 1024px) ----- */
-    @media screen and (min-width: 1024px) {
+    @media screen and (min-width: 1025px) {
       /* On larger screens, we hide the tab buttons (we don't need them
          because we'll show all panels side by side) */
       .tab-buttons {
@@ -122,7 +122,7 @@
 
       /* Show all panels side by side */
       .panel {
-        display: inline-block; /* or 'flex', but inline-block is simpler here */
+        display: flex; /* or 'flex', but inline-block is simpler here */
         vertical-align: top;
         width: 30%;
         margin-right: 1.5%;
