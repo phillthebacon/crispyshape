@@ -471,6 +471,100 @@
     <em>Your custom skateboard design will be saved with all your specifications!</em>
 
   </div>
+  <!-- Canvas Library - Fallback Implementation -->
+  <script>
+    // Fallback Canvas Implementation when Fabric.js is not available
+    function createFallbackCanvas() {
+      var canvas = document.getElementById('boardCanvas');
+      var ctx = canvas.getContext('2d');
+      
+      // Set canvas size
+      canvas.width = 800;
+      canvas.height = 240;
+      
+      // White background
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      
+      // Draw faint grid (1 inch = ~23.5 pixels for 34" width)
+      var pixelsPerInch = canvas.width / 34;
+      ctx.strokeStyle = '#ecf0f1';
+      ctx.lineWidth = 0.5;
+      
+      // Vertical grid lines
+      for (var x = 0; x <= canvas.width; x += pixelsPerInch) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, canvas.height);
+        ctx.stroke();
+      }
+      
+      // Horizontal grid lines  
+      for (var y = 0; y <= canvas.height; y += pixelsPerInch) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(canvas.width, y);
+        ctx.stroke();
+      }
+      
+      // Center lines
+      var centerX = canvas.width / 2;
+      var centerY = canvas.height / 2;
+      
+      ctx.strokeStyle = '#27ae60';
+      ctx.lineWidth = 2;
+      
+      // Vertical center line
+      ctx.beginPath();
+      ctx.moveTo(centerX, 0);
+      ctx.lineTo(centerX, canvas.height);
+      ctx.stroke();
+      
+      // Horizontal center line
+      ctx.beginPath();
+      ctx.moveTo(0, centerY);
+      ctx.lineTo(canvas.width, centerY);
+      ctx.stroke();
+      
+      // Nose area (left 6 inches)
+      ctx.fillStyle = 'rgba(231, 76, 60, 0.15)';
+      ctx.fillRect(0, 0, pixelsPerInch * 6, canvas.height);
+      
+      // Tail area (right 6 inches)
+      ctx.fillStyle = 'rgba(52, 152, 219, 0.15)';
+      ctx.fillRect(canvas.width - (pixelsPerInch * 6), 0, pixelsPerInch * 6, canvas.height);
+      
+      // Draw sample skateboard shape
+      drawSampleBoard(ctx, canvas.width, canvas.height, pixelsPerInch);
+    }
+    
+    function drawSampleBoard(ctx, canvasWidth, canvasHeight, pixelsPerInch) {
+      var centerY = canvasHeight / 2;
+      var startX = pixelsPerInch * 6; // Start after nose area
+      var endX = canvasWidth - (pixelsPerInch * 6); // End before tail area
+      var boardWidth = pixelsPerInch * 8.5; // 8.5 inch width
+      
+      ctx.strokeStyle = '#2c3e50';
+      ctx.lineWidth = 3;
+      
+      // Simple skateboard outline
+      ctx.beginPath();
+      ctx.moveTo(startX, centerY - boardWidth/2);
+      ctx.lineTo(endX, centerY - boardWidth/2);
+      ctx.lineTo(endX, centerY + boardWidth/2);
+      ctx.lineTo(startX, centerY + boardWidth/2);
+      ctx.closePath();
+      ctx.stroke();
+      
+      // Add text overlay
+      ctx.fillStyle = '#7f8c8d';
+      ctx.font = '14px -apple-system, BlinkMacSystemFont, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('Skateboard Design Canvas', canvasWidth/2, 30);
+      ctx.fillText('Adjust sliders to customize your board shape', canvasWidth/2, canvasHeight - 15);
+    }
+  </script>
+  
   <!-- Fabric.js Library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/521/fabric.min.js"></script>
   <!-- Main JavaScript -->
@@ -483,14 +577,8 @@
     window.onload = function() {
       // Check if Fabric.js is available
       if (typeof fabric === 'undefined') {
-        document.getElementById('boardCanvas').style.border = '3px dashed #e74c3c';
-        var ctx = document.getElementById('boardCanvas').getContext('2d');
-        ctx.fillStyle = '#f8f9fa';
-        ctx.fillRect(0, 0, 800, 300);
-        ctx.fillStyle = '#e74c3c';
-        ctx.font = '16px sans-serif';
-        ctx.textAlign = 'center';
-        ctx.fillText('Canvas unavailable - external library blocked', 400, 150);
+        console.log('Fabric.js not available, using fallback canvas');
+        createFallbackCanvas();
         return;
       }
       
@@ -600,10 +688,7 @@
     }
 
     function updateBoardShape() {
-      if (body) canvas.remove(body);
-      if (nose) canvas.remove(nose);
-      if (tail) canvas.remove(tail);
-
+      // Update display values
       var widthNose = parseFloat(document.getElementById('bodyWidthNose').value);
       var widthTail = parseFloat(document.getElementById('bodyWidthTail').value);
       var noseLength = parseFloat(document.getElementById('noseLength').value);
@@ -632,6 +717,17 @@
 
       var totalBoardLength = noseLength + tailLength + 22;
       document.getElementById('totalBoardLengthValue').innerText = formatTwoDecimalPlaces(totalBoardLength);
+
+      // Only update fabric canvas if it's available
+      if (typeof fabric !== 'undefined' && canvas) {
+        updateFabricCanvas(widthNose, widthTail, noseLength, tailLength, noseWidth, noseCurvature, noseCtrlPos, tailWidth, tailCurvature, tailCtrlPos, bodyCurvature, bodyCtrlPos);
+      }
+    }
+    
+    function updateFabricCanvas(widthNose, widthTail, noseLength, tailLength, noseWidth, noseCurvature, noseCtrlPos, tailWidth, tailCurvature, tailCtrlPos, bodyCurvature, bodyCtrlPos) {
+      if (body) canvas.remove(body);
+      if (nose) canvas.remove(nose);
+      if (tail) canvas.remove(tail);
 
       var bodyLengthPx = canvas.getWidth() - inchesToPixels(12);
 
@@ -702,9 +798,13 @@
     }
 
     function clearCanvas() {
-      canvas.clear();
-      canvas.setBackgroundColor('#ffffff', canvas.renderAll.bind(canvas));
-      drawDefaultLinesAndZones();
+      if (typeof fabric !== 'undefined' && canvas) {
+        canvas.clear();
+        canvas.setBackgroundColor('#ffffff', canvas.renderAll.bind(canvas));
+        drawDefaultLinesAndZones();
+      } else {
+        createFallbackCanvas();
+      }
     }
 
     function resetToDefault() {
@@ -728,44 +828,52 @@
       if (!filename) return;
       if (!filename.endsWith(".png")) filename += ".png";
       
-      // Calculate a multiplier so the saved image is at least 1024px wide
-      var multiplier = Math.max(1024 / canvas.getWidth(), 1);
+      var canvasElement = document.getElementById('boardCanvas');
       
-      var originalHeight = canvas.getHeight();
-      // Add extra height for the comment area, ensuring it will be ~100px tall after scaling
-      var extraHeight = 100 / multiplier;
-      canvas.setHeight(originalHeight + extraHeight);
-      
-      var comment = document.getElementById('userComment').value;
-      var commentObj = null;
-      if (comment) {
-        // Temporarily set a reduced font size so that after scaling it appears as intended (12px)
-        commentObj = new fabric.Textbox("Comment: " + comment, {
-          left: 20,
-          top: originalHeight + 10,
-          fontSize: 12 / multiplier,
-          fill: 'black',
-          width: canvas.getWidth() - 40,
-          textAlign: 'left'
+      if (typeof fabric !== 'undefined' && canvas && canvas.getWidth) {
+        // Use fabric canvas export
+        var multiplier = Math.max(1024 / canvas.getWidth(), 1);
+        var originalHeight = canvas.getHeight();
+        var extraHeight = 100 / multiplier;
+        canvas.setHeight(originalHeight + extraHeight);
+        
+        var comment = document.getElementById('userComment').value;
+        var commentObj = null;
+        if (comment) {
+          commentObj = new fabric.Textbox("Comment: " + comment, {
+            left: 20,
+            top: originalHeight + 10,
+            fontSize: 12 / multiplier,
+            fill: 'black',
+            width: canvas.getWidth() - 40,
+            textAlign: 'left'
+          });
+          canvas.add(commentObj);
+        }
+        
+        canvas.renderAll();
+        
+        var dataURL = canvas.toDataURL({
+          format: 'png',
+          multiplier: multiplier
         });
-        canvas.add(commentObj);
+        
+        if (commentObj) canvas.remove(commentObj);
+        canvas.setHeight(originalHeight);
+        canvas.renderAll();
+        
+        var link = document.createElement('a');
+        link.href = dataURL;
+        link.download = filename;
+        link.click();
+      } else {
+        // Use fallback canvas export
+        var dataURL = canvasElement.toDataURL('image/png');
+        var link = document.createElement('a');
+        link.href = dataURL;
+        link.download = filename;
+        link.click();
       }
-      
-      canvas.renderAll();
-      
-      var dataURL = canvas.toDataURL({
-        format: 'png',
-        multiplier: multiplier
-      });
-      
-      if (commentObj) canvas.remove(commentObj);
-      canvas.setHeight(originalHeight);
-      canvas.renderAll();
-      
-      var link = document.createElement('a');
-      link.href = dataURL;
-      link.download = filename;
-      link.click();
     }
 
     function preventScrollOnSliders() {
